@@ -8,8 +8,15 @@ const passport = require('passport');
 const router = express.Router();
 
 /* GET users listing. */
-router.get('/', cors.corsWithOptions, function(req, res, next) {
-	res.send('respond with a resource');
+router.get('/', cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
+	 User.find()
+    .populate()
+    .then(users => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json(users);
+    })
+    .catch(err => next(err));
 });
 
 router.post('/signup', cors.corsWithOptions, (req, res, ) => {
